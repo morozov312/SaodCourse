@@ -1,20 +1,21 @@
 #include "list.hpp"
 #include "record.hpp"
+#include <fstream>
 #include <iostream>
-#include <cstdio>
 using namespace std;
 
 forwardList readFile(char *path) {
     forwardList tempList;
-    FILE *file;
-    file = fopen(path, "rb");
     record temp{};
-    for (int i = 0; i < 4000; ++i) {
-        fread(&temp,sizeof(record),1,file);
-        tempList.addNode(temp);
-        fseek(file,sizeof(record),1);
+    ifstream file(path, ios::in | ios::binary);
+    if (!file) {
+        cout << "File open error !!!";
     }
-    fclose(file);
+    while (file.read(reinterpret_cast<char *>(&temp), sizeof(record))) {
+        tempList.addNode(temp);
+        file.seekg(sizeof(record), ios::cur);
+    }
+    file.close();
     return tempList;
 }
 int main() {

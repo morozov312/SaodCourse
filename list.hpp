@@ -36,7 +36,7 @@ public:
     void printList() {
         Node *tempNode = head;
         if (!tempNode) {
-            std::cout << "forward list is empty!" << std::endl;
+            std::cout << "This list is empty!" << std::endl;
         } else {
             do {
                 std::cout << tempNode->data.author << std::endl;
