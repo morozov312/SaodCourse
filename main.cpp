@@ -4,6 +4,16 @@
 #include <iostream>
 using namespace std;
 
+void ReplaceSpaces(char* str);
+forwardList ReadFile(char *path);
+
+int main() {
+    char path[] = "testBase1.dat";
+    forwardList list = ReadFile(path);
+    list.printList();
+    return 0;
+}
+
 void ReplaceSpaces(char* str){
     for (int i = 0; str[i] != '\0'; ++i) {
         if(str[i] == ' '){
@@ -28,10 +38,4 @@ forwardList ReadFile(char *path) {
     }
     file.close();
     return tempList;
-}
-int main() {
-    char path[] = "testBase1.dat";
-    forwardList list = ReadFile(path);
-    list.printList();
-    return 0;
 }

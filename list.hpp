@@ -29,6 +29,7 @@ public:
             delete oldHead;
         } while (tempHead != nullptr);
         m_head= nullptr;
+        delete m_head;
     }
     void addNode(record data) {
         Node *tempNode = new Node;
