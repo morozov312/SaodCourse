@@ -5,50 +5,57 @@ class forwardList {
 
 private:
     struct Node {
-        record data;
+        record data{};
         Node *next;
+        Node() {
+            data = {};
+            next = nullptr;
+        }
     };
-    Node *head;
-    Node *findLastNode() const {
-        Node *ptr_current_node = head;
-        if (ptr_current_node == nullptr) {
-            return nullptr;
-        }
-        while (ptr_current_node->next != nullptr) {
-            ptr_current_node = ptr_current_node->next;
-        }
-        return ptr_current_node;
-    }
+    Node *m_head;
 
 public:
     forwardList() {
-        head = nullptr;
+        m_head = nullptr;
+    }
+    ~forwardList() {
+        Node *tempHead = m_head;
+        if (m_head == nullptr) {
+            return;
+        }
+        do{
+            Node* oldHead=tempHead;
+            tempHead=tempHead->next;
+            delete oldHead;
+        } while (tempHead != nullptr);
+        m_head= nullptr;
     }
     void addNode(record data) {
         Node *tempNode = new Node;
         tempNode->data = data;
-        if (head != nullptr) {
-            findLastNode()->next = tempNode;
+        if (m_head == nullptr) {
+            m_head = tempNode;
         } else {
-            head = tempNode;
+            tempNode->next = m_head;
+            m_head = tempNode;
         }
     }
     void printList() {
-        Node *tempNode = head;
+        Node *tempNode = m_head;
         if (!tempNode) {
             std::cout << "This list is empty!" << std::endl;
         } else {
             do {
                 for (int i = 0; i < 20; ++i) {
-                    std::cout.width(12);
+                    std::cout.width( sizeof(tempNode->data.author));
                     std::cout << tempNode->data.author;
-                    std::cout.width(32);
+                    std::cout.width( sizeof(tempNode->data.title));
                     std::cout << tempNode->data.title;
-                    std::cout.width(16);
+                    std::cout.width( sizeof(tempNode->data.publishingHouse));
                     std::cout << tempNode->data.publishingHouse;
-                    std::cout.width(10);
+                    std::cout.width(8);
                     std::cout << tempNode->data.year;
-                    std::cout.width(10);
+                    std::cout.width(8);
                     std::cout << tempNode->data.qtyPages;
                     std::cout << std::endl;
                     tempNode = tempNode->next;
@@ -58,7 +65,7 @@ public:
                 do {
                     std::cin >> key;
                 } while (key != 'y' && key != 'n');
-                if(key == 'n'){
+                if (key == 'n') {
                     break;
                 }
             } while (tempNode != nullptr);
