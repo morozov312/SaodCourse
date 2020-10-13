@@ -14,8 +14,10 @@ private:
     Node *m_head, *m_tail;
     int m_listSize = 0;
     Node **m_indexArray;
-    const int m_pageSize = 1000;
+    int m_pageSize = 20;
+    bool m_sorted = false;
     // methods
+    // for print
     static char choosePage(char key) {
         cout << "Показать следующие 20 записей?(y) Предыдущие 20?(p) Выбрать страницу по номеру?(n) Выход(e)" << endl;
         bool errorFlag = false;
@@ -43,7 +45,8 @@ private:
         }
     }
     int printPage(int currIndex) {
-        const unsigned int numbersOutWidth = 8;
+        const unsigned int numbersOutWidth = 6;
+        cout << endl;
         for (int i = 0; i < m_pageSize; ++i, currIndex++) {
             int displayIndex = currIndex + 1;
             try {
@@ -52,6 +55,7 @@ private:
             } catch (std::range_error &e) {
                 break;
             }
+            cout.width(numbersOutWidth);
             cout << displayIndex;
             cout.width(sizeof(m_head->data.author));
             cout << (m_indexArray[currIndex]->data).author;
@@ -81,6 +85,89 @@ private:
         }
         return currIndex;
     }
+    // for sort
+    static void merge(Node *low, Node *high, Node **tempHead) {
+        Node tmp;
+        *tempHead = nullptr;
+        if (low == nullptr) {
+            *tempHead = high;
+            return;
+        }
+        if (high == nullptr) {
+            *tempHead = low;
+            return;
+        }
+        if (strcmp(low->data.publishingHouse, high->data.publishingHouse) < 0) {
+            *tempHead = low;
+            low = low->next;
+        } else if (strcmp(low->data.publishingHouse, high->data.publishingHouse) == 0) {
+            if (strcmp(low->data.author, high->data.author) < 0) {
+                *tempHead = low;
+                low = low->next;
+            } else {
+                *tempHead = high;
+                high = high->next;
+            }
+        } else {
+            *tempHead = high;
+            high = high->next;
+        }
+        tmp.next = *tempHead;
+        while (low && high) {
+            if (strcmp(low->data.publishingHouse, high->data.publishingHouse) < 0) {
+                (*tempHead)->next = low;
+                low = low->next;
+            } else if (strcmp(low->data.publishingHouse, high->data.publishingHouse) == 0) {
+                if (strcmp(low->data.author, high->data.author) < 0) {
+                    (*tempHead)->next = low;
+                    low = low->next;
+                } else {
+                    (*tempHead)->next = high;
+                    high = high->next;
+                }
+            } else {
+                (*tempHead)->next = high;
+                high = high->next;
+            }
+            (*tempHead) = (*tempHead)->next;
+        }
+        if (low) {
+            while (low) {
+                (*tempHead)->next = low;
+                (*tempHead) = (*tempHead)->next;
+                low = low->next;
+            }
+        }
+        if (high) {
+            while (high) {
+                (*tempHead)->next = high;
+                (*tempHead) = (*tempHead)->next;
+                high = high->next;
+            }
+        }
+        *tempHead = tmp.next;
+    }
+    static void split(Node **low, Node **high, Node *tempHead) {
+        Node *fast;
+        Node *slow;
+        if (tempHead == nullptr || tempHead->next == nullptr) {
+            (*low) = tempHead;
+            (*high) = nullptr;
+            return;
+        }
+        slow = tempHead;
+        fast = tempHead->next;
+        while (fast != nullptr) {
+            fast = fast->next;
+            if (fast != nullptr) {
+                fast = fast->next;
+                slow = slow->next;
+            }
+        }
+        (*low) = tempHead;
+        (*high) = slow->next;
+        slow->next = nullptr;
+    }
 
 public:
     List() {
@@ -88,17 +175,14 @@ public:
         m_tail = nullptr;
         m_indexArray = nullptr;
     }
-    Node *getHead() {
-        return this->m_head;
-    }
-    void setHead(Node *newHead) {
-        this->m_head = newHead;
-    }
-    int getSize() const {
-        return this->m_listSize;
-    }
     Node **getIndexArray() {
         return this->m_indexArray;
+    }
+    bool isSorted() const {
+        if (!this->m_sorted) {
+            return false;
+        }
+        return true;
     }
     void addNode(record data) {
         m_listSize++;
@@ -115,11 +199,15 @@ public:
         m_indexArray = new Node *[m_listSize];
         Node *tempNode = m_head;
         for (int i = 0; i < m_listSize; ++i) {
+            if (!tempNode) {
+                return;
+            }
             m_indexArray[i] = tempNode;
             tempNode = tempNode->next;
         }
     }
     void printList() {
+        this->createIndexArray();
         if (m_listSize == 0) {
             cout << "Список пуст!" << endl;
             return;
@@ -145,20 +233,41 @@ public:
             }
         }
     }
-    ~List() {
-        // list
-        Node *tempHead = m_head;
-        if (m_head == nullptr) {
+    void mergeSort(Node **head = nullptr) {
+        this->m_sorted = true;
+        if (!head) {
+            head = &this->m_head;
+        }
+        Node *low = nullptr;
+        Node *high = nullptr;
+        if ((*head == nullptr) || ((*head)->next == nullptr)) {
             return;
         }
-        do {
-            Node *oldHead = tempHead;
-            tempHead = tempHead->next;
-            delete oldHead;
-        } while (tempHead != nullptr);
-        m_head = nullptr;
-        delete m_head;
-        // array
-        delete[] m_indexArray;
+        split(&low, &high, *head);
+        mergeSort(&low);
+        mergeSort(&high);
+        merge(low, high, head);
+    }
+    int binarySearch(const char key[]) {
+        if (!this->isSorted()) {
+            cout << "Массив не отсортирован!" << endl;
+            return -1;
+        }
+        Node **arr = m_indexArray;
+        const int keySize = strlen(key);
+        int mid, left = 0, right = m_listSize;
+        while (left < right) {
+            mid = (left + right) / 2;
+            if (strncmp(arr[mid]->data.publishingHouse, key, keySize) < 0) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        if (strncmp(arr[right]->data.publishingHouse, key, keySize) == 0) {
+            return right;
+        } else {
+            return -1;
+        }
     }
 };
