@@ -1,14 +1,15 @@
 #include "list.hpp"
 #include "tools.hpp"
+#include <cstring>
 #include <fstream>
 #include <iostream>
 using namespace std;
 
-List ReadFile(char *path);
+List ReadFile(const char *path);
 int Menu(List &list);
 
 int main() {
-    char path[] = "testBase1.dat";
+    const char path[] = "testBase1.dat";
     List list = ReadFile(path);
     list.createIndexArray();
     while (true) {
@@ -54,17 +55,19 @@ int Menu(List &list) {
             list.createIndexArray();
             int size = list.getSize();
             Node **arr = list.getIndexArray();
-            char searchKey[] = " â";
+            const char searchKey[] = " â";
             List queue;
             int res = BinarySearch(arr, 0, size, searchKey);
             if (res != -1) {
                 queue.addNode(arr[res]->data);
-            }
-            while (res != -1) {
-                res = BinarySearch(arr, res + 1, size, searchKey);
-                if (res != -1) {
-                    queue.addNode(arr[res]->data);
-                }
+                do {
+                    res++;
+                    if (strncmp(arr[res]->data.publishingHouse, searchKey, strlen(searchKey)) == 0) {
+                        queue.addNode(arr[res]->data);
+                    } else {
+                        break;
+                    }
+                } while (res <= size);
             }
             queue.createIndexArray();
             queue.printList();
@@ -77,7 +80,7 @@ int Menu(List &list) {
     }
     return 1;
 }
-List ReadFile(char *path) {
+List ReadFile(const char *path) {
     List tempList;
     record temp{};
     ifstream file(path, ios::in | ios::binary);
