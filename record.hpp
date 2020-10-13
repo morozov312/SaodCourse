@@ -6,3 +6,7 @@ struct record {
     short int year;
     short int qtyPages;
 };
+struct Node {
+    record data{};
+    Node *next = nullptr;
+};
