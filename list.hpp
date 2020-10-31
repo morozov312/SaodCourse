@@ -12,22 +12,25 @@ class List {
 private:
     // members
     Node *m_head, *m_tail;
-    int m_listSize = 0;
+    int m_listSize = 0, m_pageSize = 20, m_foundIndex = 0;
     Node **m_indexArray;
-    int m_pageSize = 20;
     bool m_sorted = false;
     // methods
     // for print
-    static char choosePage(char key) {
+    static char choosePage() {
+        char key;
+        std::string tempStr;
         cout << "Показать следующие 20 записей?(y) Предыдущие 20?(p) Выбрать страницу по номеру?(n) Выход(e)" << endl;
         bool errorFlag = false;
         do {
             if (errorFlag) {
                 cout << "Такого варианта нет,Попробуйте еще раз!" << endl;
             }
-            cin >> key;
+            cin >> tempStr;
+            if (tempStr.length() > 1) tempStr = "";
             errorFlag = true;
-        } while (key != 'y' && key != 'e' && key != 'p' && key != 'n');
+        } while (tempStr[0] != 'y' && tempStr[0] != 'e' && tempStr[0] != 'p' && tempStr[0] != 'n');
+        key = tempStr[0];
         switch (key) {
             case 'e':
                 return 'e';
@@ -48,7 +51,7 @@ private:
         const unsigned int numbersOutWidth = 6;
         cout << endl;
         for (int i = 0; i < m_pageSize; ++i, currIndex++) {
-            int displayIndex = currIndex + 1;
+            int displayIndex = currIndex + 1 + this->m_foundIndex;
             try {
                 if (currIndex >= m_listSize)
                     throw std::range_error("Out of range");
@@ -178,11 +181,14 @@ public:
     Node **getIndexArray() {
         return this->m_indexArray;
     }
-    bool isSorted() const {
-        if (!this->m_sorted) {
-            return false;
+    bool isEmpty() const {
+        if (this->m_listSize == 0) {
+            return true;
         }
-        return true;
+        return false;
+    }
+    void setFoundIndex(int index) {
+        this->m_foundIndex = index;
     }
     void addNode(record data) {
         m_listSize++;
@@ -216,7 +222,7 @@ public:
         int currIndex = 0;
         currIndex = printPage(currIndex);
         while (currIndex != m_listSize) {
-            key = choosePage(key);
+            key = choosePage();
             if (key == 'y') {
                 currIndex = printPage(currIndex);
             } else if (key == 'p') {
@@ -248,14 +254,14 @@ public:
         mergeSort(&high);
         merge(low, high, head);
     }
-    int binarySearch(const char key[]) {
-        if (!this->isSorted()) {
-            cout << "Массив не отсортирован!" << endl;
+    int binarySearch(char *key) {
+        if (!this->m_sorted) {
+            cout << "Список не отсортирован!" << endl;
             return -1;
         }
         Node **arr = m_indexArray;
-        const int keySize = strlen(key);
-        int mid, left = 0, right = m_listSize;
+        const int keySize = 3;
+        int mid, left = 0, right = m_listSize - 1;
         while (left < right) {
             mid = (left + right) / 2;
             if (strncmp(arr[mid]->data.publishingHouse, key, keySize) < 0) {
@@ -269,5 +275,8 @@ public:
         } else {
             return -1;
         }
+    }
+    ~List() {
+        delete[] m_indexArray;
     }
 };
