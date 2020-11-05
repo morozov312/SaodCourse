@@ -202,6 +202,7 @@ public:
         }
     }
     void createIndexArray() {
+        delete[] m_indexArray;
         m_indexArray = new Node *[m_listSize];
         Node *tempNode = m_head;
         for (int i = 0; i < m_listSize; ++i) {
@@ -277,6 +278,11 @@ public:
         }
     }
     ~List() {
+        if (m_indexArray) {
+            for (size_t i = 0; i < m_listSize; i++) {
+                delete m_indexArray[i];
+            }
+        }
         delete[] m_indexArray;
     }
 };
