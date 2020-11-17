@@ -1,5 +1,6 @@
 #include "list.hpp"
 #include "tools.hpp"
+#include "tree.hpp"
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -63,8 +64,12 @@ int Menu(const char *path, List &list, List &queue) {
             break;
         }
         case 5: {
-            cout << "Дерево еще не готово" << endl;
-            // todo Build three
+            if (queue.isEmpty()) {
+                break;
+            } else {
+                Tree DOPA1(queue.getIndexArray(), queue.getIndexArraySize());
+                DOPA1.createWeightArray();
+            }
             break;
         }
         case 6: {
@@ -81,7 +86,7 @@ int Menu(const char *path, List &list, List &queue) {
 }
 void CreateQueue(List &list, List &queue) {
     Node **arr = list.getIndexArray();
-    char searchKey[4];
+    char searchKey[3];
     int tryCounter = 0;
     cout << "Введите первые три буквы издательства для поиска: ";
     while (true) {

@@ -181,6 +181,9 @@ public:
     Node **getIndexArray() {
         return this->m_indexArray;
     }
+    int getIndexArraySize() const {
+        return this->m_listSize;
+    }
     bool isEmpty() const {
         if (this->m_listSize == 0) {
             return true;
