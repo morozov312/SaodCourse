@@ -90,28 +90,41 @@ private:
     }
     void createWeightArray() {
         quickSort(0, m_queueIndexArraySize - 1);
-        int currWeight = 0;
-        for (int i = 0; i < m_queueIndexArraySize - 1; ++i) {
-            if (currWeight == 0) {
-                m_uniqueRecords.push_back((*m_queueIndexArray[i]).data);
+        int currWeight = 1;
+        for (int i = 0; i < m_queueIndexArraySize; ++i) {
+            cout.width(6);
+            cout << m_queueIndexArray[i]->data.year << " ";
+        }
+        cout << endl;
+        for (int i = 0; i < m_queueIndexArraySize; ++i) {
+            if ((i != m_queueIndexArraySize - 1) && (m_queueIndexArray[i]->data.year == m_queueIndexArray[i + 1]->data.year)) {
                 currWeight++;
-            } else {
-                if ((*m_queueIndexArray[i]).data.year != (*m_queueIndexArray[i + 1]).data.year) {
+                int j = i + 1;
+                while ((j != m_queueIndexArraySize - 1) && (m_queueIndexArray[j]->data.year == m_queueIndexArray[j + 1]->data.year)) {
                     currWeight++;
-                    m_weightArray.push_back(currWeight);
-                    currWeight = 0;
-                } else {
-                    currWeight++;
+                    j++;
                 }
             }
-        }
-        if (currWeight == 0) {
-            m_uniqueRecords.push_back((*m_queueIndexArray[m_queueIndexArraySize - 1]).data);
-            m_weightArray.push_back(1);
-        } else {
-            currWeight++;
+            m_uniqueRecords.push_back(m_queueIndexArray[i]->data);
             m_weightArray.push_back(currWeight);
+            i += currWeight - 1;
+            currWeight = 1;
         }
+        for (auto &i : m_uniqueRecords) {
+            cout.width(6);
+            cout << i.year << " ";
+        }
+        cout << endl;
+        for (auto &i : m_weightArray) {
+            cout.width(6);
+            cout << i << " ";
+        }
+        cout << endl;
+        int res = 0;
+        for (auto &i : m_weightArray) {
+            res += i;
+        }
+        cout << res << endl;
     }
 
 public:
