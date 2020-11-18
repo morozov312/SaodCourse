@@ -7,8 +7,9 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-class List {
+const unsigned int numbersOutWidth = 6;
 
+class List {
 private:
     // members
     Node *m_head, *m_tail;
@@ -48,7 +49,6 @@ private:
         }
     }
     int printPage(int currIndex) {
-        const unsigned int numbersOutWidth = 6;
         cout << endl;
         for (int i = 0; i < m_pageSize; ++i, currIndex++) {
             int displayIndex = currIndex + 1 + this->m_foundIndex;

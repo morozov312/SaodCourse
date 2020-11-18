@@ -34,15 +34,6 @@ private:
             (*head_ptr)->data = key;
         }
     }
-
-public:
-    Tree(Node **indexArr, int size) {
-        this->m_queueIndexArray = indexArr;
-        this->m_queueIndexArraySize = size;
-    }
-    Vertex *getRoot() {
-        return m_root;
-    };
     static void swapNodes(Node **first, Node **second) {
         Node *temp = *first;
         *first = *second;
@@ -72,6 +63,31 @@ public:
             quickSort(i, R);
         }
     }
+    void reverseQuickSort(int L, int R) {
+        int i = L;
+        int j = R;
+        int temp = m_weightArray[(i + j) / 2];
+        while (i <= j) {
+            while (m_weightArray[i] > temp) {
+                i++;
+            }
+            while (m_weightArray[j] < temp) {
+                j--;
+            }
+            if (i <= j) {
+                swap(m_weightArray[i], m_weightArray[j]);
+                swap(m_uniqueRecords[i], m_uniqueRecords[j]);
+                i++;
+                j--;
+            }
+        }
+        if (L < j) {
+            reverseQuickSort(L, j);
+        }
+        if (i < R) {
+            reverseQuickSort(i, R);
+        }
+    }
     void createWeightArray() {
         quickSort(0, m_queueIndexArraySize - 1);
         int currWeight = 0;
@@ -97,33 +113,18 @@ public:
             m_weightArray.push_back(currWeight);
         }
     }
-    void QuickSortRev(int L, int R) {
-        int i = L;
-        int j = R;
-        int temp = m_weightArray[(i + j) / 2];
-        while (i <= j) {
-            while (m_weightArray[i] > temp) {
-                i++;
-            }
-            while (m_weightArray[j] < temp) {
-                j--;
-            }
-            if (i <= j) {
-                swap(m_weightArray[i], m_weightArray[j]);
-                swap(m_uniqueRecords[i], m_uniqueRecords[j]);
-                i++;
-                j--;
-            }
-        }
-        if (L < j) {
-            QuickSortRev(L, j);
-        }
-        if (i < R) {
-            QuickSortRev(i, R);
-        }
+
+public:
+    Tree(Node **indexArr, int size) {
+        this->m_queueIndexArray = indexArr;
+        this->m_queueIndexArraySize = size;
     }
+    Vertex *getRoot() {
+        return m_root;
+    };
     void buildTreeA1() {
-        QuickSortRev(0, (int) m_uniqueRecords.size() - 1);
+        createWeightArray();
+        reverseQuickSort(0, (int) m_uniqueRecords.size() - 1);
         for (auto &i : m_uniqueRecords) {
             addDoubleIndirection(i, &m_root);
         }
@@ -131,7 +132,17 @@ public:
     void printLeftToRight(Vertex *root) {
         if (root != nullptr) {
             printLeftToRight(root->ptrLeft);
-            cout << root->data.year << " ";
+            cout.width(sizeof(root->data.author));
+            cout << (root->data).author;
+            cout.width(sizeof(root->data.title));
+            cout << (root->data).title;
+            cout.width(sizeof(root->data.publishingHouse));
+            cout << (root->data).publishingHouse;
+            cout.width(numbersOutWidth);
+            cout << (root->data).year;
+            cout.width(numbersOutWidth);
+            cout << (root->data).qtyPages;
+            cout << endl;
             printLeftToRight(root->ptrRight);
         }
     }

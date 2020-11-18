@@ -68,7 +68,6 @@ int Menu(const char *path, List &list, List &queue) {
                 break;
             } else {
                 Tree DOPA1(queue.getIndexArray(), queue.getIndexArraySize());
-                DOPA1.createWeightArray();
                 DOPA1.buildTreeA1();
                 Vertex *root = DOPA1.getRoot();
                 DOPA1.printLeftToRight(root);
