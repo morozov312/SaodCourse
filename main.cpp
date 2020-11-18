@@ -29,7 +29,8 @@ int Menu(const char *path, List &list, List &queue) {
     cout << "3 - Сортировка слиянием по полям 1-издательство 2-автор:" << endl;
     cout << "4 - Быстрый посик по первым трем буквам издательства:" << endl;
     cout << "5 - Построить дерево оптимального поиска А1:" << endl;
-    cout << "6 - Закодировать БД кодом Фано:" << endl;
+    cout << "6 - Поиск в дереве" << endl;
+    cout << "7 - Закодировать БД кодом Фано:" << endl;
     cin >> key;
     if (!CheckCin()) {
         cout << "Некорректный выбор пункта меню!" << endl;
@@ -65,6 +66,7 @@ int Menu(const char *path, List &list, List &queue) {
         }
         case 5: {
             if (queue.isEmpty()) {
+                cout << "Очередь для построения еще не готова!" << endl;
                 break;
             } else {
                 Tree DOPA1(queue.getIndexArray(), queue.getIndexArraySize());
@@ -76,6 +78,11 @@ int Menu(const char *path, List &list, List &queue) {
             break;
         }
         case 6: {
+            cout << "Поиск" << endl;
+            // todo Fano code
+            break;
+        }
+        case 7: {
             cout << "Кодировка еще не готова" << endl;
             // todo Fano code
             break;

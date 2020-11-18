@@ -92,11 +92,6 @@ private:
         quickSort(0, m_queueIndexArraySize - 1);
         int currWeight = 1;
         for (int i = 0; i < m_queueIndexArraySize; ++i) {
-            cout.width(6);
-            cout << m_queueIndexArray[i]->data.year << " ";
-        }
-        cout << endl;
-        for (int i = 0; i < m_queueIndexArraySize; ++i) {
             if ((i != m_queueIndexArraySize - 1) && (m_queueIndexArray[i]->data.year == m_queueIndexArray[i + 1]->data.year)) {
                 currWeight++;
                 int j = i + 1;
@@ -110,21 +105,6 @@ private:
             i += currWeight - 1;
             currWeight = 1;
         }
-        for (auto &i : m_uniqueRecords) {
-            cout.width(6);
-            cout << i.year << " ";
-        }
-        cout << endl;
-        for (auto &i : m_weightArray) {
-            cout.width(6);
-            cout << i << " ";
-        }
-        cout << endl;
-        int res = 0;
-        for (auto &i : m_weightArray) {
-            res += i;
-        }
-        cout << res << endl;
     }
 
 public:
