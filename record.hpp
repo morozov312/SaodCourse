@@ -10,8 +10,3 @@ struct Node {
     record data{};
     Node *next = nullptr;
 };
-struct Vertex {
-    record data{};
-    Vertex *ptrRight = nullptr;
-    Vertex *ptrLeft = nullptr;
-};

@@ -1,12 +1,18 @@
 #pragma once
-
 #include "list.hpp"
 #include "record.hpp"
 #include <algorithm>
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
+struct Vertex {
+    List data{};
+    Vertex *ptrRight = nullptr;
+    Vertex *ptrLeft = nullptr;
+    int weight = 0;
+};
 class Tree {
 
 private:
@@ -15,14 +21,15 @@ private:
     int m_queueIndexArraySize = 0;
     vector<record> m_uniqueRecords;
     vector<int> m_weightArray;
+    vector<List> m_ListArray;
     Vertex *m_root = nullptr;
     // methods
-    static void addDoubleIndirection(record key, Vertex **root) {
+    void addDoubleIndirection(List key, Vertex **root, int weightPos) {
         Vertex **head_ptr = root;
         while (*head_ptr) {
-            if (key.year < (*head_ptr)->data.year) {
+            if (key.begin()->data.year < (*head_ptr)->data.begin()->data.year) {
                 head_ptr = &((*head_ptr)->ptrLeft);
-            } else if (key.year > (*head_ptr)->data.year) {
+            } else if (key.begin()->data.year > (*head_ptr)->data.begin()->data.year) {
                 head_ptr = &((*head_ptr)->ptrRight);
             } else {
                 cout << "Element is already in the array" << endl;
@@ -32,6 +39,7 @@ private:
         if (*head_ptr == nullptr) {
             *head_ptr = new Vertex;
             (*head_ptr)->data = key;
+            (*head_ptr)->weight = m_weightArray[weightPos];
         }
     }
     static void swapNodes(Node **first, Node **second) {
@@ -76,7 +84,7 @@ private:
             }
             if (i <= j) {
                 swap(m_weightArray[i], m_weightArray[j]);
-                swap(m_uniqueRecords[i], m_uniqueRecords[j]);
+                swap(m_ListArray[i], m_ListArray[j]);
                 i++;
                 j--;
             }
@@ -106,6 +114,16 @@ private:
             currWeight = 1;
         }
     }
+    void createListArray() {
+        int pos = 0;
+        for (auto &i : m_weightArray) {
+            List tempList{};
+            for (int j = 0; j < i; ++j, ++pos) {
+                tempList.addNode(m_queueIndexArray[pos]->data);
+            }
+            m_ListArray.push_back(tempList);
+        }
+    }
 
 public:
     Tree(Node **indexArr, int size) {
@@ -117,25 +135,20 @@ public:
     };
     void buildTreeA1() {
         createWeightArray();
-        reverseQuickSort(0, (int) m_uniqueRecords.size() - 1);
-        for (auto &i : m_uniqueRecords) {
-            addDoubleIndirection(i, &m_root);
+        createListArray();
+        reverseQuickSort(0, (int) m_ListArray.size() - 1);
+        int weightPos = 0;
+        for (auto &i : m_ListArray) {
+            addDoubleIndirection(i, &m_root, weightPos);
+            weightPos++;
         }
     }
     void printLeftToRight(Vertex *root) {
         if (root != nullptr) {
             printLeftToRight(root->ptrLeft);
-            cout.width(sizeof(root->data.author));
-            cout << (root->data).author;
-            cout.width(sizeof(root->data.title));
-            cout << (root->data).title;
-            cout.width(sizeof(root->data.publishingHouse));
-            cout << (root->data).publishingHouse;
-            cout.width(numbersOutWidth);
-            cout << (root->data).year;
-            cout.width(numbersOutWidth);
-            cout << (root->data).qtyPages;
-            cout << endl;
+            cout.width(4);
+            cout << root->weight;
+            root->data.printList();
             printLeftToRight(root->ptrRight);
         }
     }

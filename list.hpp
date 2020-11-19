@@ -21,7 +21,7 @@ private:
     static char choosePage() {
         char key;
         std::string tempStr;
-        cout << "Показать следующие 20 записей?(y) Предыдущие 20?(p) Выбрать страницу по номеру?(n) Выход(e)" << endl;
+        cout << "Показать следующую страницу?(y) Предыдущую?(p) Выбрать страницу по номеру?(n) Выход(e)" << endl;
         bool errorFlag = false;
         do {
             if (errorFlag) {
@@ -183,6 +183,9 @@ public:
     }
     int getIndexArraySize() const {
         return this->m_listSize;
+    }
+    Node *begin() {
+        return m_head;
     }
     bool isEmpty() const {
         if (this->m_listSize == 0) {
