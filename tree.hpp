@@ -27,9 +27,9 @@ private:
     void addDoubleIndirection(List key, Vertex **root, int weightPos) {
         Vertex **head_ptr = root;
         while (*head_ptr) {
-            if (key.begin()->data.year < (*head_ptr)->data.begin()->data.year) {
+            if (key.begin().year < (*head_ptr)->data.begin().year) {
                 head_ptr = &((*head_ptr)->ptrLeft);
-            } else if (key.begin()->data.year > (*head_ptr)->data.begin()->data.year) {
+            } else if (key.begin().year > (*head_ptr)->data.begin().year) {
                 head_ptr = &((*head_ptr)->ptrRight);
             } else {
                 cout << "Element is already in the array" << endl;
@@ -126,13 +126,28 @@ private:
     }
 
 public:
-    Tree(Node **indexArr, int size) {
+    void setIndexArray(Node **indexArr, int size) {
         this->m_queueIndexArray = indexArr;
         this->m_queueIndexArraySize = size;
     }
     Vertex *getRoot() {
         return m_root;
-    };
+    }
+    bool isEmpty() {
+        if (m_root) {
+            return false;
+        }
+        return true;
+    }
+    List search(int key, Vertex *root) {
+        List tempList;
+        if (!root) return tempList;
+        if (key < root->data.begin().year)
+            return search(key, root->ptrLeft);
+        else if (key > root->data.begin().year)
+            return search(key, root->ptrRight);
+        return root->data;
+    }
     void buildTreeA1() {
         createWeightArray();
         createListArray();
@@ -147,7 +162,7 @@ public:
         if (root != nullptr) {
             printLeftToRight(root->ptrLeft);
             cout.width(4);
-            cout << root->weight;
+            cout << root->weight << endl;
             root->data.printList();
             printLeftToRight(root->ptrRight);
         }

@@ -49,7 +49,6 @@ private:
         }
     }
     int printPage(int currIndex) {
-        cout << endl;
         for (int i = 0; i < m_pageSize; ++i, currIndex++) {
             int displayIndex = currIndex + 1 + this->m_foundIndex;
             try {
@@ -184,8 +183,8 @@ public:
     int getIndexArraySize() const {
         return this->m_listSize;
     }
-    Node *begin() {
-        return m_head;
+    record begin() {
+        return m_head->data;
     }
     bool isEmpty() const {
         if (this->m_listSize == 0) {

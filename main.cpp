@@ -7,30 +7,33 @@
 using namespace std;
 
 List ReadFile(const char *path);
-int Menu(const char *path, List &list, List &queue);
+int Menu(const char *path, List &list, List &queue, Tree &DOPA1);
 void CreateQueue(List &list, List &queue);
 
 int main() {
     const char dataBasePath[] = "testBase1.dat";
     List list, searchQueue;
+    Tree DOPA1;
     while (true) {
-        int res = Menu(dataBasePath, list, searchQueue);
+        int res = Menu(dataBasePath, list, searchQueue, DOPA1);
         if (!res) break;
     }
     return 0;
 }
 
-int Menu(const char *path, List &list, List &queue) {
+int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
     int key;
     cout << "Выберите пнукт меню:" << endl;
     cout << "0 - Выход" << endl;
     cout << "1 - Загрузить БД в динамическую память" << endl;
     cout << "2 - Вывод текущего состояния БД" << endl;
-    cout << "3 - Сортировка слиянием по полям 1-издательство 2-автор:" << endl;
-    cout << "4 - Быстрый посик по первым трем буквам издательства:" << endl;
-    cout << "5 - Построить дерево оптимального поиска А1:" << endl;
-    cout << "6 - Поиск в дереве" << endl;
-    cout << "7 - Закодировать БД кодом Фано:" << endl;
+    cout << "3 - Сортировка слиянием по полям 1-издательство 2-автор" << endl;
+    cout << "4 - Быстрый посик по первым трем буквам издательства" << endl;
+    cout << "5 - Вывод очереди по результатам поиска" << endl;
+    cout << "6 - Построить дерево оптимального поиска А1" << endl;
+    cout << "7 - Вывод дерева(с лева на право)" << endl;
+    cout << "8 - Поиск в дереве" << endl;
+    cout << "9 - Закодировать БД кодом Фано:" << endl;
     cin >> key;
     if (!CheckCin()) {
         cout << "Некорректный выбор пункта меню!" << endl;
@@ -58,31 +61,61 @@ int Menu(const char *path, List &list, List &queue) {
         case 4: {
             list.createIndexArray();
             CreateQueue(list, queue);
-            if (queue.isEmpty())
+            if (queue.isEmpty()) {
                 cout << "По данному ключу поиска записей не найдено!" << endl;
+            } else {
+                queue.createIndexArray();
+                cout << "Очередь успешно построена!" << endl;
+            }
+            break;
+        }
+        case 5: {
+            if (queue.isEmpty())
+                cout << "Очередь еще не построена!" << endl;
             else
                 queue.printList();
             break;
         }
-        case 5: {
+        case 6: {
             if (queue.isEmpty()) {
                 cout << "Очередь для построения еще не готова!" << endl;
-                break;
             } else {
-                Tree DOPA1(queue.getIndexArray(), queue.getIndexArraySize());
+                DOPA1.setIndexArray(queue.getIndexArray(), queue.getIndexArraySize());
                 DOPA1.buildTreeA1();
-                Vertex *root = DOPA1.getRoot();
-                DOPA1.printLeftToRight(root);
-                cout << endl;
+                cout << "Дерево успешно построено!" << endl;
             }
             break;
         }
-        case 6: {
-            cout << "Поиск" << endl;
-            // todo Fano code
+        case 7: {
+            if (DOPA1.isEmpty())
+                cout << "Дерево не было построено!" << endl;
+            else {
+                Vertex *root = DOPA1.getRoot();
+                DOPA1.printLeftToRight(root);
+            }
             break;
         }
-        case 7: {
+        case 8: {
+            if (DOPA1.isEmpty()) {
+                cout << "Дерево не было построено!" << endl;
+            } else {
+                Vertex *root = DOPA1.getRoot();
+                int searchKey;
+                cout << "Введите год для поиска записей: ";
+                cin >> searchKey;
+                if (!CheckCin()) {
+                    cout << "Некорректный ввод поля поиска" << endl;
+                    break;
+                }
+                List result = DOPA1.search(searchKey, root);
+                if (result.isEmpty())
+                    cout << "Записей с таким годом в очереди не найдено!" << endl;
+                else
+                    result.printList();
+            }
+            break;
+        }
+        case 9: {
             cout << "Кодировка еще не готова" << endl;
             // todo Fano code
             break;
@@ -93,6 +126,11 @@ int Menu(const char *path, List &list, List &queue) {
         }
     }
     return 1;
+}
+char charToUppercase(char symbol) {
+    if ((int) symbol > -96 && (int) symbol < -64)
+        return (char) (symbol - 32);
+    return symbol;
 }
 void CreateQueue(List &list, List &queue) {
     Node **arr = list.getIndexArray();
@@ -107,6 +145,7 @@ void CreateQueue(List &list, List &queue) {
         tryCounter++;
         if (CheckCin()) break;
     }
+    searchKey[0] = charToUppercase(searchKey[0]);
     int res = list.binarySearch(searchKey);
     queue.setFoundIndex(res);
     if (res != -1) {
