@@ -14,36 +14,38 @@ private:
     // members
     Node *m_head, *m_tail;
     int m_listSize = 0, m_pageSize = 20, m_foundIndex = 0;
-    Node **m_indexArray;
+    Node **m_indexArray = nullptr;
     bool m_sorted = false;
     // methods
     // for print
     static char choosePage() {
         char key;
         std::string tempStr;
-        cout << "Показать следующую страницу?(y) Предыдущую?(p) Выбрать страницу по номеру?(n) Выход(e)" << endl;
+        cout << "Show next page? (y) Previous? (p) Select page by number? (n) Exit (e)" << endl;
         bool errorFlag = false;
         do {
             if (errorFlag) {
-                cout << "Такого варианта нет,Попробуйте еще раз!" << endl;
+                cout << "There is no such option, try again!" << endl;
             }
             cin >> tempStr;
             if (tempStr.length() > 1) tempStr = "";
             errorFlag = true;
-        } while (tempStr[0] != 'y' && tempStr[0] != 'e' && tempStr[0] != 'p' && tempStr[0] != 'n');
+        } while (tempStr[0] != 'y' && tempStr[0] != 'e' && tempStr[0] != 'p' && tempStr[0] != 'n' &&
+                 tempStr[0] != 'Y' && tempStr[0] != 'E' && tempStr[0] != 'P' && tempStr[0] != 'N');
         key = tempStr[0];
         switch (key) {
             case 'e':
+            case 'E':
                 return 'e';
-            case 'y': {
+            case 'y':
+            case 'Y':
                 return 'y';
-            }
-            case 'p': {
+            case 'p':
+            case 'P':
                 return 'p';
-            }
-            case 'n': {
+            case 'n':
+            case 'N':
                 return 'n';
-            }
             default:
                 return -1;
         }
@@ -74,12 +76,12 @@ private:
         return currIndex;
     }
     int printPageByNum(int currIndex) {
-        cout << "Введите номер страницы: ";
+        cout << "Enter page number: ";
         int pageNumber;
         cin >> pageNumber;
         CheckCin();
         if (pageNumber <= 0 || pageNumber > m_listSize / m_pageSize) {
-            cout << "Невозможно прочитать страницу с таким номером!" << endl;
+            cout << "It is impossible to read a page with that number!" << endl;
             return currIndex;
         } else {
             currIndex = (pageNumber - 1) * m_pageSize;
@@ -175,7 +177,6 @@ public:
     List() {
         m_head = nullptr;
         m_tail = nullptr;
-        m_indexArray = nullptr;
     }
     Node **getIndexArray() {
         return this->m_indexArray;
@@ -211,7 +212,7 @@ public:
     }
     void createIndexArray() {
         delete[] m_indexArray;
-        m_indexArray = new Node *[m_listSize];
+        this->m_indexArray = new Node *[m_listSize];
         Node *tempNode = m_head;
         for (int i = 0; i < m_listSize; ++i) {
             if (!tempNode) {
@@ -224,7 +225,7 @@ public:
     void printList() {
         this->createIndexArray();
         if (m_listSize == 0) {
-            cout << "Список пуст!" << endl;
+            cout << "List is Empty!" << endl;
             return;
         }
         char key;
@@ -237,7 +238,7 @@ public:
             } else if (key == 'p') {
                 currIndex -= m_pageSize * 2;
                 if (currIndex < 0) {
-                    cout << "Выход за пределы БД!" << endl;
+                    cout << "Out of range database!" << endl;
                     currIndex = 0;
                 }
                 currIndex = printPage(currIndex);
@@ -265,7 +266,7 @@ public:
     }
     int binarySearch(char *key) {
         if (!this->m_sorted) {
-            cout << "Список не отсортирован!" << endl;
+            cout << "List doesn't sorted" << endl;
             return -1;
         }
         Node **arr = m_indexArray;

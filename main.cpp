@@ -23,30 +23,30 @@ int main() {
 
 int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
     int key;
-    cout << "Выберите пнукт меню:" << endl;
-    cout << "0 - Выход" << endl;
-    cout << "1 - Загрузить БД в динамическую память" << endl;
-    cout << "2 - Вывод текущего состояния БД" << endl;
-    cout << "3 - Сортировка слиянием по полям 1-издательство 2-автор" << endl;
-    cout << "4 - Быстрый посик по первым трем буквам издательства" << endl;
-    cout << "5 - Вывод очереди по результатам поиска" << endl;
-    cout << "6 - Построить дерево оптимального поиска А1" << endl;
-    cout << "7 - Вывод дерева(с лева на право)" << endl;
-    cout << "8 - Поиск в дереве" << endl;
-    cout << "9 - Закодировать БД кодом Фано:" << endl;
+    cout << "Select a menu item:" << endl;
+    cout << "0 - Exit" << endl;
+    cout << "1 - Download database on dynamic memory" << endl;
+    cout << "2 - Print current database state" << endl;
+    cout << "3 - Merge sort by fields: 1 - publisher 2 - author" << endl;
+    cout << "4 - Binary search by first three letters publisher house" << endl;
+    cout << "5 - Print queue by search results" << endl;
+    cout << "6 - Build optimal binary search tree A1" << endl;
+    cout << "7 - Tree traversal LNR" << endl;
+    cout << "8 - Search in tree by year" << endl;
+    cout << "9 - Encode database by Fano code" << endl;
     cin >> key;
     if (!CheckCin()) {
-        cout << "Некорректный выбор пункта меню!" << endl;
+        cout << "Incorrect menu item selection!" << endl;
         return -1;
     }
     switch (key) {
         case 0: {
-            cout << "Выход";
+            cout << "Exit";
             return 0;
         }
         case 1: {
             if (list.isEmpty()) list = ReadFile(path);
-            cout << "База данных была загружена в динамическую память" << endl;
+            cout << "Database recorded on dynamic memory" << endl;
             break;
         }
         case 2: {
@@ -55,10 +55,10 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
         }
         case 3: {
             if (list.isEmpty()) {
-                cout << "Список пуст" << endl;
+                cout << "List is empty!" << endl;
             } else {
                 if (!list.isSorted()) list.mergeSort();
-                cout << "Список успешно отсортирован!" << endl;
+                cout << "List successfully sorted " << endl;
             }
             break;
         }
@@ -66,34 +66,34 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
             list.createIndexArray();
             CreateQueue(list, queue);
             if (queue.isEmpty()) {
-                cout << "По данному ключу поиска записей не найдено!" << endl;
+                cout << "No records found for this search key!" << endl;
             } else {
                 queue.createIndexArray();
-                cout << "Очередь успешно построена!" << endl;
+                cout << "Queue successfully build" << endl;
             }
             break;
         }
         case 5: {
             if (queue.isEmpty())
-                cout << "Очередь еще не построена!" << endl;
+                cout << "Queue not built yet!" << endl;
             else
                 queue.printList();
             break;
         }
         case 6: {
             if (queue.isEmpty()) {
-                cout << "Очередь для построения еще не готова!" << endl;
+                cout << "Queue for tree build doesn't ready!" << endl;
                 break;
             } else if (DOPA1.isEmpty()) {
                 DOPA1.setIndexArray(queue.getIndexArray(), queue.getIndexArraySize());
                 DOPA1.buildTreeA1();
             }
-            cout << "Дерево успешно построено!" << endl;
+            cout << "Tree successfully build" << endl;
             break;
         }
         case 7: {
             if (DOPA1.isEmpty())
-                cout << "Дерево не было построено!" << endl;
+                cout << "Tree doesn't ready" << endl;
             else {
                 Vertex *root = DOPA1.getRoot();
                 DOPA1.printLeftToRight(root);
@@ -102,31 +102,31 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
         }
         case 8: {
             if (DOPA1.isEmpty()) {
-                cout << "Дерево не было построено!" << endl;
+                cout << "Tree doesn't ready" << endl;
             } else {
                 Vertex *root = DOPA1.getRoot();
                 int searchKey;
-                cout << "Введите год для поиска записей: ";
+                cout << "Please enter year for records search: ";
                 cin >> searchKey;
                 if (!CheckCin()) {
-                    cout << "Некорректный ввод поля поиска" << endl;
+                    cout << "Incorrect entry of the search field!" << endl;
                     break;
                 }
                 List result = DOPA1.search(searchKey, root);
                 if (result.isEmpty())
-                    cout << "Записей с таким годом в очереди не найдено!" << endl;
+                    cout << "No records with this year were found in queue!" << endl;
                 else
                     result.printList();
             }
             break;
         }
         case 9: {
-            cout << "Кодировка еще не готова" << endl;
+            cout << "Fano code doesn't ready!" << endl;
             // todo Fano code
             break;
         }
         default: {
-            cout << "Такого пункта нет" << endl;
+            cout << "There is no such item in the menu!" << endl;
             break;
         }
     }
@@ -139,13 +139,13 @@ char charToUppercase(char symbol) {
 }
 void CreateQueue(List &list, List &queue) {
     Node **arr = list.getIndexArray();
-    char searchKey[3];
+    char searchKey[4];
     int tryCounter = 0;
-    cout << "Введите первые три буквы издательства для поиска: ";
+    cout << "Enter the first three letters of the publisher to search for: ";
     while (true) {
         cin >> searchKey;
         if (tryCounter != 0) {
-            cout << "Ошибка ввода! Попробуйте еще раз" << endl;
+            cout << "Input Error! try again" << endl;
         }
         tryCounter++;
         if (CheckCin()) break;
