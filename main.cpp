@@ -21,6 +21,11 @@ int main() {
     return 0;
 }
 
+char CharToUppercase(char symbol) {
+    if ((int) symbol > -96 && (int) symbol < -64)
+        return (char) (symbol - 32);
+    return symbol;
+}
 int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
     int key;
     cout << "Select a menu item:" << endl;
@@ -36,7 +41,7 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
     cout << "9 - Encode database by Fano code" << endl;
     cin >> key;
     if (!CheckCin()) {
-        cout << "Incorrect menu item selection!" << endl;
+        cout << " \x1b[31m Incorrect menu item selection! \x1b[0m" << endl;
         return -1;
     }
     switch (key) {
@@ -46,7 +51,7 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
         }
         case 1: {
             if (list.isEmpty()) list = ReadFile(path);
-            cout << "Database recorded on dynamic memory" << endl;
+            cout << "\x1b[32m Database recorded on dynamic memory \x1b[0m" << endl;
             break;
         }
         case 2: {
@@ -58,7 +63,7 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
                 cout << "List is empty!" << endl;
             } else {
                 if (!list.isSorted()) list.mergeSort();
-                cout << "List successfully sorted " << endl;
+                cout << "\x1b[32m List successfully sorted \x1b[0m" << endl;
             }
             break;
         }
@@ -69,31 +74,31 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
                 cout << "No records found for this search key!" << endl;
             } else {
                 queue.createIndexArray();
-                cout << "Queue successfully build" << endl;
+                cout << "\x1b[32m Queue successfully build \x1b[0m" << endl;
             }
             break;
         }
         case 5: {
             if (queue.isEmpty())
-                cout << "Queue not built yet!" << endl;
+                cout << " \x1b[31m Queue not built yet! \x1b[0m" << endl;
             else
                 queue.printList();
             break;
         }
         case 6: {
             if (queue.isEmpty()) {
-                cout << "Queue for tree build doesn't ready!" << endl;
+                cout << " \x1b[31m Queue for tree build doesn't ready! \x1b[0m" << endl;
                 break;
             } else if (DOPA1.isEmpty()) {
                 DOPA1.setIndexArray(queue.getIndexArray(), queue.getIndexArraySize());
                 DOPA1.buildTreeA1();
             }
-            cout << "Tree successfully build" << endl;
+            cout << "\x1b[32m Tree successfully build \x1b[0m" << endl;
             break;
         }
         case 7: {
             if (DOPA1.isEmpty())
-                cout << "Tree doesn't ready" << endl;
+                cout << " \x1b[31m Tree doesn't ready! \x1b[0m" << endl;
             else {
                 Vertex *root = DOPA1.getRoot();
                 DOPA1.printLeftToRight(root);
@@ -102,14 +107,14 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
         }
         case 8: {
             if (DOPA1.isEmpty()) {
-                cout << "Tree doesn't ready" << endl;
+                cout << " \x1b[31m Tree doesn't ready! \x1b[0m" << endl;
             } else {
                 Vertex *root = DOPA1.getRoot();
                 int searchKey;
                 cout << "Please enter year for records search: ";
                 cin >> searchKey;
                 if (!CheckCin()) {
-                    cout << "Incorrect entry of the search field!" << endl;
+                    cout << " \x1b[31m Incorrect entry of the search field! \x1b[0m" << endl;
                     break;
                 }
                 List result = DOPA1.search(searchKey, root);
@@ -126,16 +131,11 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
             break;
         }
         default: {
-            cout << "There is no such item in the menu!" << endl;
+            cout << "\x1b[31m There is no such item in the menu! \x1b[0m" << endl;
             break;
         }
     }
     return 1;
-}
-char charToUppercase(char symbol) {
-    if ((int) symbol > -96 && (int) symbol < -64)
-        return (char) (symbol - 32);
-    return symbol;
 }
 void CreateQueue(List &list, List &queue) {
     Node **arr = list.getIndexArray();
@@ -145,12 +145,12 @@ void CreateQueue(List &list, List &queue) {
     while (true) {
         cin >> searchKey;
         if (tryCounter != 0) {
-            cout << "Input Error! try again" << endl;
+            cout << "\x1b[31m Input Error! try again \x1b[0m" << endl;
         }
         tryCounter++;
         if (CheckCin()) break;
     }
-    searchKey[0] = charToUppercase(searchKey[0]);
+    searchKey[0] = CharToUppercase(searchKey[0]);
     int res = list.binarySearch(searchKey);
     queue.setFoundIndex(res);
     if (res != -1) {
@@ -170,7 +170,7 @@ List ReadFile(const char *path) {
     record temp{};
     ifstream file(path, ios::in | ios::binary);
     if (!file) {
-        cout << "File open error !!!";
+        cout << "\x1b[31m File open error! \x1b[0m";
         return tempList;
     }
     while (file.read((char *) (&temp), sizeof(record))) {

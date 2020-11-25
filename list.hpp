@@ -25,7 +25,7 @@ private:
         bool errorFlag = false;
         do {
             if (errorFlag) {
-                cout << "There is no such option, try again!" << endl;
+                cout << "\x1b[31m There is no such option, try again! \x1b[0m" << endl;
             }
             cin >> tempStr;
             if (tempStr.length() > 1) tempStr = "";
@@ -187,6 +187,9 @@ public:
     record begin() {
         return m_head->data;
     }
+    void setFoundIndex(int index) {
+        this->m_foundIndex = index;
+    }
     bool isEmpty() const {
         if (this->m_listSize == 0) {
             return true;
@@ -195,9 +198,6 @@ public:
     }
     bool isSorted() const {
         return this->m_sorted;
-    }
-    void setFoundIndex(int index) {
-        this->m_foundIndex = index;
     }
     void addNode(record data) {
         m_listSize++;
@@ -238,7 +238,7 @@ public:
             } else if (key == 'p') {
                 currIndex -= m_pageSize * 2;
                 if (currIndex < 0) {
-                    cout << "Out of range database!" << endl;
+                    cout << "\x1b[31m Out of range database! \x1b[0m" << endl;
                     currIndex = 0;
                 }
                 currIndex = printPage(currIndex);
