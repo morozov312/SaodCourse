@@ -45,7 +45,7 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
             return 0;
         }
         case 1: {
-            list = ReadFile(path);
+            if (list.isEmpty()) list = ReadFile(path);
             cout << "База данных была загружена в динамическую память" << endl;
             break;
         }
@@ -54,8 +54,12 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
             break;
         }
         case 3: {
-            list.mergeSort();
-            cout << "Список успешно отсортирован!" << endl;
+            if (list.isEmpty()) {
+                cout << "Список пуст" << endl;
+            } else {
+                if (!list.isSorted()) list.mergeSort();
+                cout << "Список успешно отсортирован!" << endl;
+            }
             break;
         }
         case 4: {
@@ -79,11 +83,12 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
         case 6: {
             if (queue.isEmpty()) {
                 cout << "Очередь для построения еще не готова!" << endl;
-            } else {
+                break;
+            } else if (DOPA1.isEmpty()) {
                 DOPA1.setIndexArray(queue.getIndexArray(), queue.getIndexArraySize());
                 DOPA1.buildTreeA1();
-                cout << "Дерево успешно построено!" << endl;
             }
+            cout << "Дерево успешно построено!" << endl;
             break;
         }
         case 7: {

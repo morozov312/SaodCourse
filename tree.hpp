@@ -124,11 +124,11 @@ private:
             m_ListArray.push_back(tempList);
         }
     }
-    void destroyRecursive(Vertex **leaf) {
-        if ((*leaf)) {
-            destroyRecursive(&((*leaf)->ptrLeft));
-            destroyRecursive(&((*leaf)->ptrRight));
-            delete (*leaf);
+    void destroyRecursive(Vertex **root) {
+        if (*root) {
+            destroyRecursive(&((*root)->ptrLeft));
+            destroyRecursive(&((*root)->ptrRight));
+            delete *root;
         }
     }
 

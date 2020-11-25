@@ -192,6 +192,9 @@ public:
         }
         return false;
     }
+    bool isSorted() const {
+        return this->m_sorted;
+    }
     void setFoundIndex(int index) {
         this->m_foundIndex = index;
     }
