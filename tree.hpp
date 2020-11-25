@@ -124,6 +124,13 @@ private:
             m_ListArray.push_back(tempList);
         }
     }
+    void destroyRecursive(Vertex **leaf) {
+        if ((*leaf)) {
+            destroyRecursive(&((*leaf)->ptrLeft));
+            destroyRecursive(&((*leaf)->ptrRight));
+            delete (*leaf);
+        }
+    }
 
 public:
     void setIndexArray(Node **indexArr, int size) {
@@ -166,5 +173,8 @@ public:
             root->data.printList();
             printLeftToRight(root->ptrRight);
         }
+    }
+    ~Tree() {
+        destroyRecursive(&m_root);
     }
 };
