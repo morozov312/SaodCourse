@@ -19,7 +19,6 @@ private:
     // members
     Node **m_queueIndexArray = nullptr;
     int m_queueIndexArraySize = 0;
-    vector<record> m_uniqueRecords;
     vector<int> m_weightArray;
     vector<List> m_ListArray;
     Vertex *m_root = nullptr;
@@ -108,7 +107,6 @@ private:
                     j++;
                 }
             }
-            m_uniqueRecords.push_back(m_queueIndexArray[i]->data);
             m_weightArray.push_back(currWeight);
             i += currWeight - 1;
             currWeight = 1;
