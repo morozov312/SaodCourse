@@ -287,9 +287,11 @@ public:
         }
     }
     ~List() {
-        if (m_indexArray) {
-            for (size_t i = 0; i < m_listSize; i++) {
-                delete m_indexArray[i];
+        if (m_head) {
+            while (m_head->next != nullptr) {
+                Node *temp = m_head->next;
+                delete m_head;
+                m_head = temp;
             }
         }
         delete[] m_indexArray;
