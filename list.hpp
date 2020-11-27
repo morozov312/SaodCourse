@@ -184,9 +184,6 @@ public:
     int getIndexArraySize() const {
         return this->m_listSize;
     }
-    record begin() {
-        return m_head->data;
-    }
     void setFoundIndex(int index) {
         this->m_foundIndex = index;
     }
@@ -287,11 +284,9 @@ public:
         }
     }
     ~List() {
-        if (m_head) {
-            while (m_head->next != nullptr) {
-                Node *temp = m_head->next;
-                delete m_head;
-                m_head = temp;
+        if (m_indexArray) {
+            for (size_t i = 0; i < m_listSize; i++) {
+                delete m_indexArray[i];
             }
         }
         delete[] m_indexArray;

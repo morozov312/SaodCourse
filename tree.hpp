@@ -8,7 +8,7 @@
 using namespace std;
 
 struct Vertex {
-    List data{};
+    vector<record> data;
     Vertex *ptrRight = nullptr;
     Vertex *ptrLeft = nullptr;
     int weight = 0;
@@ -20,15 +20,15 @@ private:
     Node **m_queueIndexArray = nullptr;
     int m_queueIndexArraySize = 0;
     vector<int> m_weightArray;
-    vector<List> m_ListArray;
+    vector<vector<record>> m_vectorArray;
     Vertex *m_root = nullptr;
     // methods
-    void addDoubleIndirection(List key, Vertex **root, int weightPos) {
+    void addDoubleIndirection(vector<record> key, Vertex **root, int weightPos) {
         Vertex **head_ptr = root;
         while (*head_ptr) {
-            if (key.begin().year < (*head_ptr)->data.begin().year) {
+            if (key[0].year < (*head_ptr)->data[0].year) {
                 head_ptr = &((*head_ptr)->ptrLeft);
-            } else if (key.begin().year > (*head_ptr)->data.begin().year) {
+            } else if (key[0].year > (*head_ptr)->data[0].year) {
                 head_ptr = &((*head_ptr)->ptrRight);
             } else {
                 cout << "Element is already in the array" << endl;
@@ -83,7 +83,7 @@ private:
             }
             if (i <= j) {
                 swap(m_weightArray[i], m_weightArray[j]);
-                swap(m_ListArray[i], m_ListArray[j]);
+                swap(m_vectorArray[i], m_vectorArray[j]);
                 i++;
                 j--;
             }
@@ -112,14 +112,14 @@ private:
             currWeight = 1;
         }
     }
-    void createListArray() {
+    void createVectorArray() {
         int pos = 0;
         for (auto &i : m_weightArray) {
-            List tempList{};
+            vector<record> tempVector;
             for (int j = 0; j < i; ++j, ++pos) {
-                tempList.addNode(m_queueIndexArray[pos]->data);
+                tempVector.push_back(m_queueIndexArray[pos]->data);
             }
-            m_ListArray.push_back(tempList);
+            m_vectorArray.push_back(tempVector);
         }
     }
     void destroyRecursive(Vertex **root) {
@@ -144,21 +144,21 @@ public:
         }
         return true;
     }
-    List search(int key, Vertex *root) {
-        List tempList;
-        if (!root) return tempList;
-        if (key < root->data.begin().year)
+    vector<record> search(int key, Vertex *root) {
+        vector<record> tempVector;
+        if (!root) return tempVector;
+        if (key < root->data[0].year)
             return search(key, root->ptrLeft);
-        else if (key > root->data.begin().year)
+        else if (key > root->data[0].year)
             return search(key, root->ptrRight);
         return root->data;
     }
     void buildTreeA1() {
         createWeightArray();
-        createListArray();
-        reverseQuickSort(0, (int) m_ListArray.size() - 1);
+        createVectorArray();
+        reverseQuickSort(0, (int) m_vectorArray.size() - 1);
         int weightPos = 0;
-        for (auto &i : m_ListArray) {
+        for (auto &i : m_vectorArray) {
             addDoubleIndirection(i, &m_root, weightPos);
             weightPos++;
         }
@@ -168,7 +168,19 @@ public:
             printLeftToRight(root->ptrLeft);
             cout.width(4);
             cout << root->weight << endl;
-            root->data.printList();
+            for (auto &i : root->data) {
+                cout << "    ";
+                cout.width(sizeof(i.author));
+                cout << i.author;
+                cout.width(sizeof(i.title));
+                cout << i.title;
+                cout.width(sizeof(i.publishingHouse));
+                cout << i.publishingHouse;
+                cout.width(sizeof(numbersOutWidth));
+                cout << i.year;
+                cout.width(sizeof(numbersOutWidth));
+                cout << i.qtyPages << endl;
+            }
             printLeftToRight(root->ptrRight);
         }
     }

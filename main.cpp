@@ -11,7 +11,7 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1);
 void CreateQueue(List &list, List &queue);
 
 int main() {
-    const char dataBasePath[] = "testBase1.dat";
+    const char dataBasePath[] = "./testBase1.dat";
     List list, searchQueue;
     Tree DOPA1;
     while (true) {
@@ -117,11 +117,24 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
                     cout << " \x1b[31m Incorrect entry of the search field! \x1b[0m" << endl;
                     break;
                 }
-                List result = DOPA1.search(searchKey, root);
-                if (result.isEmpty())
+                vector<record> result = DOPA1.search(searchKey, root);
+                if (result.empty()) {
                     cout << "No records with this year were found in queue!" << endl;
-                else
-                    result.printList();
+                } else {
+                    for (auto &i : result) {
+                        cout << "    ";
+                        cout.width(sizeof(i.author));
+                        cout << i.author;
+                        cout.width(sizeof(i.title));
+                        cout << i.title;
+                        cout.width(sizeof(i.publishingHouse));
+                        cout << i.publishingHouse;
+                        cout.width(sizeof(numbersOutWidth));
+                        cout << i.year;
+                        cout.width(sizeof(numbersOutWidth));
+                        cout << i.qtyPages << endl;
+                    }
+                }
             }
             break;
         }
@@ -171,7 +184,7 @@ List ReadFile(const char *path) {
     ifstream file(path, ios::in | ios::binary);
     if (!file) {
         cout << "\x1b[31m File open error! \x1b[0m";
-        return tempList;
+        exit(42);
     }
     while (file.read((char *) (&temp), sizeof(record))) {
         tempList.addNode(temp);
