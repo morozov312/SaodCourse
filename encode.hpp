@@ -13,7 +13,6 @@ private:
     vector<double> m_probabilities;
     vector<vector<int>> m_matrix;
     vector<char> m_data;
-    vector<char> m_uniqueData;
     int calcMedian(int left, int right) {
         long double sumLeft = 0, sumRight = m_probabilities[right];
         unsigned long median;
@@ -41,7 +40,7 @@ private:
             }
             if (i <= j) {
                 swap(m_probabilities[i], m_probabilities[j]);
-                swap(m_uniqueData[i], m_uniqueData[j]);
+                swap(m_data[i], m_data[j]);
                 i++;
                 j--;
             }
@@ -55,13 +54,12 @@ private:
     }
     void calcProbabilities() {
         sort(m_data.begin(), m_data.end());
-        auto end = unique(m_data.begin(), m_data.end());
-        for (auto i = m_data.begin(); i != end; ++i) {
+        auto endPtr = unique(m_data.begin(), m_data.end());
+        for (auto i = m_data.begin(); i != endPtr; ++i) {
             int countElements = count(m_data.begin(), m_data.end(), *i);
-            m_uniqueData.push_back(*i);
             m_probabilities.push_back((double) countElements / m_data.size());
         }
-        m_data.clear();
+        m_data.erase(endPtr, m_data.end());
     }
     void algorithmFano(int left, int right) {
         if (left < right) {
@@ -82,7 +80,7 @@ private:
         for (int i = 0; i < m_matrix.size(); ++i) {
             averageLen += m_matrix[i].size() * m_probabilities[i];
             entropy -= m_probabilities[i] * log2(m_probabilities[i]);
-            cout << " " << m_uniqueData[i] << "    ";
+            cout << " " << m_data[i] << "    ";
             cout << setw(5) << to_string(m_probabilities[i]) << "    ";
             cout << m_matrix[i].size() << "    ";
             for (auto &j : m_matrix[i]) {
@@ -100,14 +98,14 @@ public:
         int listSize = list.getIndexArraySize();
         for (int i = 0; i < listSize; ++i) {
             string tmpStr;
-            for (auto &j : listIndexArr[i]->data.author) {
-                m_data.push_back(j);
+            for (int j = 0; listIndexArr[i]->data.author[j] != '\0'; j++) {
+                m_data.push_back(listIndexArr[i]->data.author[j]);
             }
-            for (auto &j : listIndexArr[i]->data.title) {
-                m_data.push_back(j);
+            for (int j = 0; listIndexArr[i]->data.title[j] != '\0'; j++) {
+                m_data.push_back(listIndexArr[i]->data.title[j]);
             }
-            for (auto &j : listIndexArr[i]->data.publishingHouse) {
-                m_data.push_back(j);
+            for (int j = 0; listIndexArr[i]->data.publishingHouse[j] != '\0'; j++) {
+                m_data.push_back(listIndexArr[i]->data.publishingHouse[j]);
             }
             tmpStr = to_string(listIndexArr[i]->data.year);
             for (auto &j : tmpStr) {
