@@ -1,3 +1,4 @@
+#include "encode.hpp"
 #include "list.hpp"
 #include "tools.hpp"
 #include "tree.hpp"
@@ -51,6 +52,7 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
         }
         case 1: {
             if (list.isEmpty()) list = ReadFile(path);
+            list.createIndexArray();
             cout << "\x1b[32m Database recorded on dynamic memory \x1b[0m" << endl;
             break;
         }
@@ -139,8 +141,12 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
             break;
         }
         case 9: {
-            cout << "Fano code doesn't ready!" << endl;
-            // todo Fano code
+            if (list.isEmpty()) {
+                cout << "List is empty!" << endl;
+            } else {
+                Encode fano(list);
+                fano.encodeFano();
+            }
             break;
         }
         default: {
