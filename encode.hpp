@@ -54,12 +54,13 @@ private:
     }
     void calcProbabilities() {
         sort(m_data.begin(), m_data.end());
-        auto endPtr = unique(m_data.begin(), m_data.end());
-        for (auto i = m_data.begin(); i != endPtr; ++i) {
-            int countElements = count(m_data.begin(), m_data.end(), *i);
+        vector<char> tmp;
+        unique_copy(m_data.begin(), m_data.end(), back_inserter(tmp));
+        for (auto &i : tmp) {
+            int countElements = count(m_data.begin(), m_data.end(), i);
             m_probabilities.push_back((double) countElements / m_data.size());
         }
-        m_data.erase(endPtr, m_data.end());
+        m_data = tmp;
     }
     void algorithmFano(int left, int right) {
         if (left < right) {
