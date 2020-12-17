@@ -22,11 +22,27 @@
 $ git clone https://github.com/morozov312/SaodCourse   
 $ cmake CMakeLists.txt && make  
 # Пример работы
-<img align="center" src="screenshots/menu.png" alt="menu">
-<p align="center"><i>Меню</i></p>
-<img align="center" src="screenshots/db.png" alt="db">
-<p align="center"><i>Вывод базы данных</i></p>
-<img align="center" src="screenshots/queue.png" alt="queue">
-<p align="center"><i>Очередь, построенная по результатам поиска</i></p>
-<img align="center" src="screenshots/tree.png" alt="tree">
-<p align="center"><i>Вывод дерева оптимального поиска, обход слева на право</i></p>
+<p align="center">
+<img src="screenshots/menu.png" alt="menu">
+</p>
+<p align="center">
+<i>Меню</i>
+</p>
+<p align="center">
+<img src="screenshots/db.png" alt="db">
+</p>
+<p align="center">
+<i>Вывод базы данных</i>
+</p>
+<p align="center">
+<img src="screenshots/queue.png" alt="queue">
+</p>
+<p align="center">
+<i>Очередь, построенная по результатам поиска</i>
+</p>
+<p align="center">
+<img src="screenshots/tree.png" alt="tree">
+</p>
+<p align="center">
+<i>Вывод дерева оптимального поиска, обход слева на право</i>
+</p>
