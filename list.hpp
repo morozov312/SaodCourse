@@ -3,11 +3,14 @@
 #include "tools.hpp"
 #include <cstring>
 #include <iostream>
+
+
 using std::cin;
 using std::cout;
 using std::endl;
 
 const unsigned int numbersOutWidth = 6;
+
 
 class List {
 private:
@@ -172,6 +175,10 @@ private:
         (*high) = slow->next;
         slow->next = nullptr;
     }
+    struct ListQueue {
+        Node *head = nullptr;
+        Node *tail = nullptr;
+    };
 
 public:
     List() {
@@ -281,6 +288,35 @@ public:
             return right;
         } else {
             return -1;
+        }
+    }
+    void DigitalSort() {
+        int KDI[60];
+        Node *tempList;
+        ListQueue queueArr[256];
+        for (int i = 12; i < 60; ++i) {
+            KDI[i] = i;
+        }
+        for (int j = 59; j >= 12; j--) {
+            for (auto &i : queueArr) {
+                i.tail = (Node *) &i.head;
+            }
+            tempList = m_head;
+            int tempKDI = KDI[j];
+            while (tempList != nullptr) {
+                int tempDigit = tempList->Digit[tempKDI];
+                queueArr[tempDigit].tail->next = tempList;
+                queueArr[tempDigit].tail = tempList;
+                tempList = tempList->next;
+            }
+            tempList = (Node *) &m_head;
+            for (auto &i : queueArr) {
+                if (i.tail != (Node *) &i.head) {
+                    tempList->next = i.head;
+                    tempList = i.tail;
+                }
+            }
+            tempList->next = nullptr;
         }
     }
     ~List() {

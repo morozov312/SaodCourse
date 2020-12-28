@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 struct record {
     char author[12];
     char title[32];
@@ -7,6 +8,9 @@ struct record {
     short int qtyPages;
 };
 struct Node {
-    record data{};
     Node *next = nullptr;
+    union {
+        record data{};
+        unsigned char Digit[sizeof(record)];
+    };
 };

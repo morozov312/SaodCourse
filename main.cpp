@@ -40,6 +40,7 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
     cout << "7 - Tree traversal LNR" << endl;
     cout << "8 - Search in tree by year" << endl;
     cout << "9 - Encode database by Fano code" << endl;
+    cout << "10 - Digital sort by fields: 1 - publisher 2 - author" << endl;
     cin >> key;
     if (!CheckCin()) {
         cout << " \x1b[31m Incorrect menu item selection! \x1b[0m" << endl;
@@ -64,7 +65,9 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
             if (list.isEmpty()) {
                 cout << "List is empty!" << endl;
             } else {
-                if (!list.isSorted()) list.mergeSort();
+                if (!list.isSorted()) {
+                    list.DigitalSort();
+                }
                 cout << "\x1b[32m List successfully sorted \x1b[0m" << endl;
             }
             break;
@@ -146,6 +149,17 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
             } else {
                 Encode fano(list);
                 fano.encodeFano();
+            }
+            break;
+        }
+        case 10: {
+            if (list.isEmpty()) {
+                cout << "List is empty!" << endl;
+            } else {
+                if (!list.isSorted()) {
+                    list.DigitalSort();
+                }
+                cout << "\x1b[32m List successfully sorted \x1b[0m" << endl;
             }
             break;
         }
