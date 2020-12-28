@@ -4,7 +4,6 @@
 #include <cstring>
 #include <iostream>
 
-
 using std::cin;
 using std::cout;
 using std::endl;
@@ -290,7 +289,8 @@ public:
             return -1;
         }
     }
-    void DigitalSort() {
+    void digitalSort() {
+        this->m_sorted = true;
         int KDI[60];
         Node *tempList;
         ListQueue queueArr[256];

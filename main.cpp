@@ -65,9 +65,7 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
             if (list.isEmpty()) {
                 cout << "List is empty!" << endl;
             } else {
-                if (!list.isSorted()) {
-                    list.DigitalSort();
-                }
+                if (!list.isSorted()) list.digitalSort();
                 cout << "\x1b[32m List successfully sorted \x1b[0m" << endl;
             }
             break;
@@ -156,9 +154,7 @@ int Menu(const char *path, List &list, List &queue, Tree &DOPA1) {
             if (list.isEmpty()) {
                 cout << "List is empty!" << endl;
             } else {
-                if (!list.isSorted()) {
-                    list.DigitalSort();
-                }
+                if (!list.isSorted()) list.digitalSort();
                 cout << "\x1b[32m List successfully sorted \x1b[0m" << endl;
             }
             break;
