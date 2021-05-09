@@ -19,8 +19,8 @@
 Закодировать файл базы данных статическим **кодом Фано**, предварительно оценив вероятности всех встречающихся в ней символов. Построенный код вывести  на  экран.  
 # Сборка
 Для сборки проекта написан CMakeList. Выполните следующие команды:  
-$ git clone https://github.com/morozov312/SaodCourse   
-$ cmake CMakeLists.txt && make  
+#### `$ git clone https://github.com/morozov312/SaodCourse`   
+#### `$ cmake CMakeLists.txt && make`  
 # Пример работы
 <p align="center">
 <img src="screenshots/menu.png" alt="menu">
